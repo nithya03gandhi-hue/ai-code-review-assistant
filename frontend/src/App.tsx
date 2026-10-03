@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+
 const API_URL = 'http://localhost:5000/api/review';
-
-
 
 function App() {
   const [code, setCode] = useState('');
@@ -26,12 +27,16 @@ function App() {
         body: JSON.stringify({ code }),
       });
 
-      if (!res.ok) throw new Error('Server error');
+      const data = await res.json().catch(() => ({}));
 
-      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(`Server ${res.status}: ${data.error || 'unknown error'}`);
+      }
+
       setReview(data.feedback);
     } catch (e) {
-      setError('Something went wrong. Please try again.');
+      console.error(e);
+      setError(e instanceof Error ? e.message : 'Something went wrong.');
     } finally {
       setLoading(false);
     }
@@ -71,20 +76,9 @@ function App() {
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {review && (
-        <div style={{ marginTop: 24 }}>
+        <div className="review" style={{ marginTop: 24, textAlign: 'left' }}>
           <h2>Review</h2>
-          <pre
-            style={{
-              whiteSpace: 'pre-wrap',
-              background: '#f5f5f5',
-              color: '#222',
-              padding: 16,
-              borderRadius: 8,
-              textAlign: 'left',
-            }}
-          >
-            {review}
-          </pre>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{review}</ReactMarkdown>
         </div>
       )}
     </div>

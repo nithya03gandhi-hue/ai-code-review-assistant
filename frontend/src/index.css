@@ -111,3 +111,7 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+.review table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+.review th, .review td { border: 1px solid #ccc; padding: 8px 10px; vertical-align: top; text-align: left; }
+.review th { background: #f0f0f0; color: #222; }
+.review pre { background: #1e1e1e; color: #eee; padding: 14px; border-radius: 8px; overflow-x: auto; }
